@@ -2,7 +2,7 @@ import { SubstrateEvent } from '@subql/types';
 import { StakingReward, SumReward } from '../types';
 import { Balance } from '@polkadot/types/interfaces';
 
-export async function handleStakingRewarded(event: SubstrateEvent): Promise<void> {
+export async function handleStakingReward(event: SubstrateEvent): Promise<void> {
     const {
         event: {
             data: [account, newReward],
@@ -20,16 +20,18 @@ function createSumReward(accountId: string): SumReward {
     entity.totalReward = BigInt(0);
     return entity;
 }
-export async function handleSumRewarded(event: SubstrateEvent): Promise<void> {
+export async function handleSumReward(event: SubstrateEvent): Promise<void> {
     const {
         event: {
             data: [account, newReward],
         },
     } = event;
     let entity = await SumReward.get(account.toString());
+
     if (entity === undefined) {
         entity = createSumReward(account.toString());
     }
+
     entity.totalReward = entity.totalReward + (newReward as Balance).toBigInt();
     entity.blockheight = event.block.block.header.number.toNumber();
     await entity.save();

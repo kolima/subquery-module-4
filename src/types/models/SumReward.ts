@@ -16,7 +16,7 @@ export class SumReward implements Entity {
 
     public totalReward: bigint;
 
-    public blockheight: number;
+    public blockheight?: number;
 
 
     async save(): Promise<void>{
